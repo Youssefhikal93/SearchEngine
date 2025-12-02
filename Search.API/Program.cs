@@ -1,3 +1,6 @@
+using Search.API.Services;
+using Search.API.Services.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -8,6 +11,8 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddHttpClient();
+builder.Services.AddScoped<ISearchEngine, GoogleSearchService>();
+builder.Services.AddScoped<ISearchEngine, WikipediaSearchService>();
 
 
 var app = builder.Build();

@@ -3,6 +3,6 @@
     public interface ISearchEngine
     {
         string EngineName { get; }
-        Task<long> HitsCount(string term, CancellationToken ct = default);
+        Task<long> HitsCount(List<string> searchWords, CancellationToken ct = default);
     }
 }
