@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Search.API.Models;
 using Search.API.Services.Interfaces;
 
@@ -10,10 +11,13 @@ namespace Search.API.Controllers
     public class SearchController : Controller
     {
         private readonly IEnumerable<ISearchEngine> _searchEngines;
-        
-        public SearchController(IEnumerable<ISearchEngine> searchEngines )
+        private readonly IMemoryCache _cache;
+
+        public SearchController(IEnumerable<ISearchEngine> searchEngines, IMemoryCache cache)
         {
             _searchEngines = searchEngines;
+            _cache = cache;
+
         }
         [HttpPost]
         public async Task<ActionResult<ProviderResult>> Search([FromBody] SearchRequest request,
@@ -23,12 +27,17 @@ namespace Search.API.Controllers
             {
                 return BadRequest( "Query cannot be empty" );
             }
+            var key = $"search_{request.Query.ToLower().Trim()}";
 
             var terms = request.Query
                 .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(t => t.Trim())
                 .Where(t => !string.IsNullOrEmpty(t))
                 .ToList();
+
+
+            if (_cache.TryGetValue(key, out SearchResponse cached))
+                return Ok(cached);
 
             var searchTasks = _searchEngines.Select(engine =>
                 SearchWithEngineAsync(engine, terms, ct));
@@ -43,6 +52,7 @@ namespace Search.API.Controllers
                 Results = results.ToList()
             };
 
+            _cache.Set(key, response, TimeSpan.FromMinutes(10));
             return Ok(response);
         }
 
