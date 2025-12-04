@@ -1,5 +1,8 @@
+using Search.API.Providers;
+using Search.API.Providers.interfaces;
 using Search.API.Services;
 using Search.API.Services.Interfaces;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,14 +14,16 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddHttpClient();
-builder.Services.AddScoped<ISearchEngine, GoogleSearchService>();
-builder.Services.AddScoped<ISearchEngine, WikipediaSearchService>();
+builder.Services.AddScoped<ISearchEngine, GoogleEngineProvider>();
+builder.Services.AddScoped<ISearchEngine, WikipediaEngineProvider>();
+builder.Services.AddScoped<ISearchService, SearchService>();
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:57455")
+        //policy.AllowAnyOrigin()
+        policy.WithOrigins(builder.Configuration.GetSection("AllowedOrigins").Get<string[]>()!)
               .AllowAnyMethod() 
               .AllowAnyHeader();
     });

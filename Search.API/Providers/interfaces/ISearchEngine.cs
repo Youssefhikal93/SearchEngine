@@ -1,4 +1,4 @@
-﻿namespace Search.API.Services.Interfaces
+﻿namespace Search.API.Providers.interfaces
 {
     public interface ISearchEngine
     {

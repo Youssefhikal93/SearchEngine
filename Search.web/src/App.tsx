@@ -15,6 +15,9 @@ interface SearchResponse {
     results: ProviderResult[];
 }
 
+//TODO
+//every word to be cached instead of full word 
+// max limit in the input 
 function App() {
     const [query, setQuery] = useState('');
     const [searchResults, setSearchResults] = useState<SearchResponse | null>(null);
