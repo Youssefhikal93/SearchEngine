@@ -26,7 +26,7 @@ namespace Search.API.Providers
             var totalResultsString =response?.Queries.Request.FirstOrDefault().TotalResults;
 
             if (long.TryParse(totalResultsString, out long hits))
-            {
+            { 
                 return hits;
             }
 

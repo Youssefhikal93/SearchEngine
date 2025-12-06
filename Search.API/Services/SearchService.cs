@@ -19,18 +19,18 @@ namespace Search.API.Services
 
         public async Task<SearchResponse> Search(string query, CancellationToken ct)
         {
-            var (cacheKey, terms) = NormalizeQuery(query);
+            var (cacheKey, terms) = PrepareQueryForCaching(query);
 
             if (_cache.TryGetValue(cacheKey, out SearchResponse cached))
                 return cached;
 
-            var tasks = _engines.Select(e => ExecuteEngine(e, terms, ct));
+            var tasks = _engines.Select(e => ExecuteEngine(e, terms.ToList(), ct));
             var results = await Task.WhenAll(tasks);
 
             var response = new SearchResponse
             {
                 Query = query,
-                SearchTerm = terms,
+                SearchTerm = terms.ToList(),
                 Results = results.ToList()
             };
 
@@ -39,13 +39,13 @@ namespace Search.API.Services
             return response;
         }
 
-        private static (string CacheKey, List<string> Terms) NormalizeQuery(string query)
+        private static (string CacheKey, HashSet<string> Terms) PrepareQueryForCaching(string query)
         {
             var cleaned = query.ToLower().Trim();
 
             var terms = cleaned
                 .Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                .ToList();
+                .ToHashSet();
 
             return ($"search_{cleaned}", terms);
         }
@@ -59,7 +59,8 @@ namespace Search.API.Services
                 {
                     ProviderName = engine.EngineName,
                     SearchTerm = string.Join(" ", terms),
-                    TotalHits = hits,
+                    WordBreakdown = hits.WordBreakdown,
+                    TotalHits = hits.TotalHits,
                     IsSuccess = true,
                     ErrorMessage = null
                 };
@@ -70,6 +71,7 @@ namespace Search.API.Services
                 {
                     ProviderName = engine.EngineName,
                     SearchTerm = string.Join(" ", terms),
+                    WordBreakdown = new(),
                     TotalHits = 0,
                     IsSuccess = false,
                     ErrorMessage = ex.Message

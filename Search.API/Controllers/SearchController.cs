@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using Search.API.Models;
 using Search.API.Services.Interfaces;
 
@@ -28,9 +27,9 @@ namespace Search.API.Controllers
 
             return Ok(response);
         }
-
-       
         
+
+
     }
 
 }

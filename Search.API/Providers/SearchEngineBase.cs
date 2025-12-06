@@ -1,4 +1,5 @@
-﻿using Search.API.Providers.interfaces;
+﻿using Search.API.Models;
+using Search.API.Providers.interfaces;
 
 namespace Search.API.Providers
 {
@@ -13,17 +14,23 @@ namespace Search.API.Providers
             _httpClient = httpClient;
         }
 
-        public async Task<long> HitsCount(List<string> searchWords, CancellationToken ct = default)
+        public async Task<ProviderResult> HitsCount(List<string> searchWords, CancellationToken ct = default)
         {
+            var wordBreakdown = new List<WordHit>();
             long totalHits = 0;
 
             foreach (var term in searchWords)
             {
-                var encoded = Uri.EscapeDataString(term);
-
                 try
                 {
-                    totalHits += await GetHitsForSingleTerm(encoded, ct);
+                    var hits = await GetHitsForSingleTerm(term, ct);
+                    wordBreakdown.Add(new WordHit
+                    {
+                        Word = term,
+                        Hits = hits
+                    });
+
+                    totalHits += hits;
                 }
                 catch (Exception ex)
                 {
@@ -31,10 +38,16 @@ namespace Search.API.Providers
                 }
             }
 
-            return totalHits;
+            return new ProviderResult
+            {
+                ProviderName = EngineName,
+                SearchTerm = string.Join(" ", searchWords),
+                TotalHits = totalHits,
+                IsSuccess = true,
+                WordBreakdown = wordBreakdown 
+            };
         }
 
-      
         protected abstract Task<long> GetHitsForSingleTerm(string encodedTerm, CancellationToken ct);
 
 
