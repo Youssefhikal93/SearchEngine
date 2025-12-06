@@ -14,7 +14,7 @@ A web application that aggregates search results from multiple search engines (G
 ## 🛠 Technologies Used
 
 ### Backend
-- **C# / ASP.NET Core 8.0+ - RESTful API
+- **C#** / ASP.NET Core 8.0+ - RESTful API
 
 ### Frontend
 - **React 19**
@@ -118,9 +118,9 @@ dotnet run
 ```
 ### 3. Frontend Setup
 
-#### A. Navigate to Frontend Directory
+#### A. Navigate to Frontend Directory (open new terminal at the root of the project)
 ```bash
-cd ../Search.web
+cd Search.web
 ```
 
 #### B. Install Dependencies
