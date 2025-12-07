@@ -7,7 +7,7 @@ A web application that aggregates search results from multiple search engines (G
 - [Project Structure](#project-structure)
 - [Prerequisites](#prerequisites)
 - [Setup Instructions](#setup-instructions)
-- [Access Points](#Access Points)
+- [Access Points](#access-points)
 
 ---
 
