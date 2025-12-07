@@ -7,7 +7,7 @@ A web application that aggregates search results from multiple search engines (G
 - [Project Structure](#project-structure)
 - [Prerequisites](#prerequisites)
 - [Setup Instructions](#setup-instructions)
-- [Running the Application](#running-the-application)
+- [Access Points](#Access Points)
 
 ---
 
@@ -86,7 +86,8 @@ Before running the project, ensure you have:
 - [Node.js 18+ and npm](https://nodejs.org/)
 - [Visual Studio 2022](https://visualstudio.microsoft.com/) or [VS Code](https://code.visualstudio.com/)
 - **Google Custom Search API Key & Google Search Engine ID (cx)** ([Get it here](https://developers.google.com/custom-search/v1/overview)) (I didint actually remove it from appsettings so its easier to review 😉😁)
-
+- **Wikipedia API sand box** ([Wiki link here](https://en.wikipedia.org/wiki/Special:ApiSandbox#action=query&list=search&srsearch=Nelson%20Mandela&utf8=&format=json
+)) (No API keys Needs 🕺)
 ---
 
 ## 🚀 Setup Instructions
