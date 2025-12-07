@@ -17,9 +17,9 @@ namespace Search.API.Providers
             _engineId = config["Google:SearchEngineId"]?? throw new Exception("Google EngineId (cx) is missing");
         }
 
-        protected override async Task<long> GetHitsForSingleTerm(string encodedTerm, CancellationToken ct)
+        protected override async Task<long> GetHitsForSingleTerm(string stringQuery, CancellationToken ct)
         {
-            var url = $"https://www.googleapis.com/customsearch/v1?key={_apiKey}&cx={_engineId}&q={encodedTerm}";
+            var url = $"https://www.googleapis.com/customsearch/v1?key={_apiKey}&cx={_engineId}&q={Uri.EscapeDataString(stringQuery)}";
 
             var response = await _httpClient.GetFromJsonAsync<GoogleSearchResponse>(url, ct);
 

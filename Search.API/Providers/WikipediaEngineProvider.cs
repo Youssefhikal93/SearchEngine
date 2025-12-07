@@ -18,9 +18,9 @@ namespace Search.API.Providers
             }
         }
 
-        protected override async Task<long> GetHitsForSingleTerm(string encodedTerm, CancellationToken ct)
+        protected override async Task<long> GetHitsForSingleTerm(string stringQuery, CancellationToken ct)
         {
-            var url =$"https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&utf8=1&formatversion=2&srsearch={encodedTerm}";
+            var url =$"https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&utf8=1&formatversion=2&srsearch={Uri.EscapeDataString(stringQuery)}";
 
             var totalResults = await _httpClient.GetFromJsonAsync<WikipediaSearchResponse>(url, ct);
 
